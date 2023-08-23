@@ -26,9 +26,20 @@ a:hover {
 body {
   margin: 0;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   place-items: center;
+  gap: 24px;
   min-width: 320px;
   min-height: 100vh;
+}
+
+body nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid white;
 }
 
 h1 {

@@ -2,18 +2,29 @@ import { ElementType } from "react";
 import { createRoot } from "react-dom/client";
 
 interface IRender {
-  id: string;
+  root: Element;
   props: object;
   Component: ElementType;
 }
 
-const Render = ({ id, props, Component }: IRender) => {
-  const element = document.getElementById(id);
-  if (!element) {
-    throw new Error(`Element with id ${id} not found`);
+// ToDo: Can replace root?
+const ReactRender = ({ root, props, Component }: IRender) => {
+  if (!root) {
+    throw new Error(`Root with ${props}, ${Component} not found`);
+  }
+  if (!Component) {
+    throw new Error(`Component with ${props}, ${root} not found`);
   }
 
-  createRoot(element).render(<Component {...props} />);
+  const rootElement = createRoot(root);
+
+  const render = (props: object) => {
+    rootElement.render(<Component {...props} />);
+  };
+
+  render(props);
+
+  return render;
 };
 
-export default Render;
+export default ReactRender;
