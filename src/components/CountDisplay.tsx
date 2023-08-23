@@ -3,6 +3,7 @@ interface ICountDisplay {
 }
 
 const CountDisplay = ({ count }: ICountDisplay) => {
+  console.log("CountDisplay");
   return <span>Count is {count}</span>;
 };
 

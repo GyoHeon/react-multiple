@@ -1,4 +1,4 @@
-import { ElementType } from "react";
+import { ElementType, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 interface IRender {
@@ -18,8 +18,16 @@ const ReactRender = ({ root, props, Component }: IRender) => {
 
   const rootElement = createRoot(root);
 
-  const render = (props: object) => {
-    rootElement.render(<Component {...props} />);
+  const render = (newProps: object) => {
+    const integratedProps = {
+      ...props,
+      ...newProps,
+    };
+    rootElement.render(
+      <StrictMode>
+        <Component {...integratedProps} />
+      </StrictMode>
+    );
   };
 
   render(props);
