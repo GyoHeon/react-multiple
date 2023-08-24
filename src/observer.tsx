@@ -10,6 +10,7 @@ const countButton = document.getElementById(
 const countNumber = document.getElementById("count-number") as HTMLSpanElement;
 
 const observedNumber = observeData<number>(0);
+// count는 재할당을 위해 따로 let 식별자를 사용
 let [count] = observedNumber;
 const [, setCount, countRender] = observedNumber;
 

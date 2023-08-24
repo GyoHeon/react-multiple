@@ -3,12 +3,11 @@ import { createRoot } from "react-dom/client";
 
 interface IRender {
   root: Element;
-  props: object;
+  props?: object;
   Component: ElementType;
 }
 
-// ToDo: Can replace root?
-const ReactRender = ({ root, props, Component }: IRender) => {
+const ReactRender = ({ root, props = {}, Component }: IRender) => {
   if (!root) {
     throw new Error(`Root with ${props}, ${Component} not found`);
   }
@@ -18,7 +17,7 @@ const ReactRender = ({ root, props, Component }: IRender) => {
 
   const rootElement = createRoot(root);
 
-  const render = (newProps: object) => {
+  const render = (newProps?: object) => {
     const integratedProps = {
       ...props,
       ...newProps,
@@ -32,6 +31,7 @@ const ReactRender = ({ root, props, Component }: IRender) => {
 
   render(props);
 
+  // rerendering 용 render 함수를 리턴합니다. props의 경우 기존 props와 새로운 props를 합쳐서 전달합니다.
   return render;
 };
 
