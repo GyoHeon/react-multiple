@@ -6,6 +6,7 @@ import "./index.css";
 const countButton = document.getElementById(
   "count-button"
 ) as HTMLButtonElement;
+
 const countNumber = document.getElementById("count-number") as HTMLSpanElement;
 
 let count = 0;

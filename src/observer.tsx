@@ -9,15 +9,15 @@ const countButton = document.getElementById(
 ) as HTMLButtonElement;
 const countNumber = document.getElementById("count-number") as HTMLSpanElement;
 
-let [count, setCount, countRender] = observeData(0);
+const observedNumber = observeData<number>(0);
+let [count] = observedNumber;
+const [, setCount, countRender] = observedNumber;
 
 const numberRender = ReactRender({
   root: countNumber,
   props: { count },
   Component: CountDisplay,
 });
-
-countRender(() => numberRender({ count }));
 
 ReactRender({
   root: countButton,
@@ -28,3 +28,6 @@ ReactRender({
   },
   Component: CountButton,
 });
+
+// 옵저버 추가
+countRender(() => numberRender({ count }));
