@@ -9,26 +9,21 @@ const countButton = document.getElementById(
 ) as HTMLButtonElement;
 const countNumber = document.getElementById("count-number") as HTMLSpanElement;
 
-const [count, setCount, countRender] = observeData(0);
-let temp = count;
+let [count, setCount, countRender] = observeData(0);
 
 const numberRender = ReactRender({
   root: countNumber,
-  props: {
-    count,
-  },
+  props: { count },
   Component: CountDisplay,
 });
-countRender(numberRender);
 
-console.log({ countRender });
+countRender(() => numberRender({ count }));
 
 ReactRender({
   root: countButton,
   props: {
     onClick: () => {
-      temp++;
-      setCount(temp, "count");
+      count = setCount(count + 1);
     },
   },
   Component: CountButton,
