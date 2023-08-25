@@ -7,7 +7,7 @@ interface IRender {
   Component: ElementType;
 }
 
-const ReactRender = ({ root, props = {}, Component }: IRender) => {
+export const makeRoot = ({ root, props = {}, Component }: IRender) => {
   if (!root) {
     throw new Error(`Root with ${props}, ${Component} not found`);
   }
@@ -34,5 +34,3 @@ const ReactRender = ({ root, props = {}, Component }: IRender) => {
   // rerendering 용 render 함수를 리턴합니다. props의 경우 기존 props와 새로운 props를 합쳐서 전달합니다.
   return render;
 };
-
-export default ReactRender;

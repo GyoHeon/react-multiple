@@ -1,7 +1,7 @@
-import ReactRender from "./Render";
 import CountButton from "./components/CountButton";
 import CountDisplay from "./components/CountDisplay";
 import "./index.css";
+import { makeRoot } from "./util/makeRoot";
 
 const countButton = document.getElementById(
   "count-button"
@@ -10,7 +10,7 @@ const countNumber = document.getElementById("count-number") as HTMLSpanElement;
 
 let count = 0;
 
-const numberRender = ReactRender({
+const numberRender = makeRoot({
   root: countNumber,
   props: {
     count,
@@ -18,7 +18,7 @@ const numberRender = ReactRender({
   Component: CountDisplay,
 });
 
-ReactRender({
+makeRoot({
   root: countButton,
   props: {
     onClick: () => {

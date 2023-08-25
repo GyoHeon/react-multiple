@@ -1,7 +1,7 @@
-import ReactRender from "./Render";
 import CountButton from "./components/CountButton";
 import CountDisplay from "./components/CountDisplay";
 import "./index.css";
+import { makeRoot } from "./util/makeRoot";
 import { observeData } from "./util/observeData";
 
 const countButton = document.getElementById(
@@ -14,13 +14,13 @@ const observedNumber = observeData<number>(0);
 let [count] = observedNumber;
 const [, setCount, countRender] = observedNumber;
 
-const numberRender = ReactRender({
+const numberRender = makeRoot({
   root: countNumber,
   props: { count },
   Component: CountDisplay,
 });
 
-ReactRender({
+makeRoot({
   root: countButton,
   props: {
     onClick: () => {

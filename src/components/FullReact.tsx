@@ -1,17 +1,16 @@
 import { useState } from "react";
-import "./App.css";
-import CountButton from "./components/CountButton";
-import CountDisplay from "./components/CountDisplay";
+import CountButton from "./CountButton";
+import CountDisplay from "./CountDisplay";
 
-function App() {
+function FullReact() {
   const [count, setCount] = useState(0);
 
   return (
-    <section>
+    <section style={{ display: "flex", flexDirection: "column" }}>
       <CountButton onClick={() => setCount(count + 1)} />
       <CountDisplay count={count} />
     </section>
   );
 }
 
-export default App;
+export default FullReact;
