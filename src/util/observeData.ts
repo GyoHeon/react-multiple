@@ -1,8 +1,6 @@
-type TRender = <T>(state: T) => void;
-
 type TObserveData = <T>(
   initialState: T
-) => [T, (newState: T) => T, (observer: TRender) => void];
+) => [T, (newState: T) => T, (observer: (state: T) => void) => void];
 
 /**
  * @description
@@ -30,7 +28,7 @@ type TObserveData = <T>(
 
 export const observeData: TObserveData = <T>(initialState: T) => {
   let state = initialState;
-  const observers: TRender[] = [];
+  const observers: ((state: T) => void)[] = [];
 
   function setState(newState: T) {
     if (newState !== state) {
@@ -42,7 +40,7 @@ export const observeData: TObserveData = <T>(initialState: T) => {
     return state;
   }
 
-  function addObserver(observer: TRender) {
+  function addObserver(observer: (state: T) => void) {
     observers.push(observer);
   }
 
