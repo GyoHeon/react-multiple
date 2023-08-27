@@ -1,8 +1,8 @@
-// type TRender = (props: object) => void;
+type TRender = <T>(state: T) => void;
 
 type TObserveData = <T>(
   initialState: T
-) => [T, (newState: T) => T, (observer: () => void) => void];
+) => [T, (newState: T) => T, (observer: TRender) => void];
 
 /**
  * @description
@@ -30,19 +30,19 @@ type TObserveData = <T>(
 
 export const observeData: TObserveData = <T>(initialState: T) => {
   let state = initialState;
-  const observers: (() => void)[] = [];
+  const observers: TRender[] = [];
 
   function setState(newState: T) {
     if (newState !== state) {
       state = newState;
-      observers.forEach((observer) => observer());
+      observers.forEach((observer) => observer(state));
     }
 
     // global 환경에서 (primitive한) state를 자동으로 업데이트 하는 방법을 찾지 못해 일단 새로운 state를 리턴합니다.
     return state;
   }
 
-  function addObserver(observer: () => void) {
+  function addObserver(observer: TRender) {
     observers.push(observer);
   }
 

@@ -31,4 +31,4 @@ makeRoot({
 });
 
 // 옵저버 추가
-countRender(() => numberRender({ count }));
+countRender((state) => numberRender({ count: state }));
