@@ -28,7 +28,7 @@ type TObserveData = <T>(
 
 export const observeData: TObserveData = <T>(initialState: T) => {
   let state = initialState;
-  const observers: ((state: T) => void)[] = [];
+  let observers: ((state: T) => void)[] = [];
 
   function setState(newState: T) {
     if (newState !== state) {
@@ -40,9 +40,17 @@ export const observeData: TObserveData = <T>(initialState: T) => {
     return state;
   }
 
-  function addObserver(observer: (state: T) => void) {
+  function setObserver(observer: (state: T) => void, remove = false) {
+    if (remove) {
+      observers = observers.filter((obs) => obs !== observer);
+      return;
+    }
+    if (observers.includes(observer)) {
+      console.warn("이미 등록된 observer입니다.");
+      return;
+    }
     observers.push(observer);
   }
 
-  return [state, setState, addObserver];
+  return [state, setState, setObserver];
 };
