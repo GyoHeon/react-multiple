@@ -26,19 +26,25 @@ type TObserveData = <T>(
  * // console output: 1
  */
 
+function updateState<T>(
+  newState: T,
+  oldState: T,
+  observers: ((state: T) => void)[]
+) {
+  if (newState !== oldState) {
+    oldState = newState;
+    observers.forEach((observer) => observer(oldState));
+  }
+
+  // global 환경에서 (primitive한) state를 자동으로 업데이트 하는 방법을 찾지 못해 일단 새로운 state를 리턴합니다.
+  return oldState;
+}
+
 export const observeData: TObserveData = <T>(initialState: T) => {
-  let state = initialState;
+  const state = initialState;
   let observers: ((state: T) => void)[] = [];
 
-  function setState(newState: T) {
-    if (newState !== state) {
-      state = newState;
-      observers.forEach((observer) => observer(state));
-    }
-
-    // global 환경에서 (primitive한) state를 자동으로 업데이트 하는 방법을 찾지 못해 일단 새로운 state를 리턴합니다.
-    return state;
-  }
+  const setState = (newState: T) => updateState(newState, state, observers);
 
   function setObserver(observer: (state: T) => void, remove = false) {
     if (remove) {
