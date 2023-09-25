@@ -1,8 +1,7 @@
+import makeRoot, { observeData } from "react-multiple";
 import CountButton from "./components/CountButton";
 import CountDisplay from "./components/CountDisplay";
 import "./index.css";
-import { makeRoot } from "./util/makeRoot";
-import { observeData } from "./util/observeData";
 
 const countButton = document.getElementById(
   "count-button"

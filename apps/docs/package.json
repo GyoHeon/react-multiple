@@ -23,6 +23,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-multiple": "workspace:^",
     "react-router-dom": "^6.15.0"
   },
   "devDependencies": {
@@ -40,9 +41,9 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "rollup": "^3.29.3",
+    "tsconfig": "workspace:*",
     "tslib": "^2.6.2",
     "typescript": "^5.0.2",
-    "vite": "^4.4.9",
-    "tsconfig": "workspace:*"
+    "vite": "^4.4.9"
   }
 }
