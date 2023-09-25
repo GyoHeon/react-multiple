@@ -27,4 +27,4 @@ dist-ssr
 
 .turbo
 
-.tsconfig.tsbuildinfo
+tsconfig.tsbuildinfo
