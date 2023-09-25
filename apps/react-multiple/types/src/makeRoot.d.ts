@@ -6,3 +6,4 @@ interface IRender {
 }
 export declare const makeRoot: ({ root, props, Component }: IRender) => (newProps?: object) => void;
 export {};
+//# sourceMappingURL=makeRoot.d.ts.map

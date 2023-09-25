@@ -2,8 +2,8 @@ import terser from "@rollup/plugin-terser";
 import typescript from "@rollup/plugin-typescript";
 
 export default {
-  external: ["react-html"],
-  input: "src/util/index.ts",
+  external: ["react-multiple"],
+  input: "src/index.ts",
   output: {
     format: "es",
     exports: "named",
