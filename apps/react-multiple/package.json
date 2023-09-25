@@ -12,13 +12,12 @@
   "main": "./dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/GyoHeon/react-html"
+    "url": "https://github.com/GyoHeon/react-html",
+    "directory": "apps/react-multiple"
   },
   "scripts": {
-    "dev": "vite",
     "build": "rollup -c",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -35,13 +34,10 @@
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.2.1",
     "@typescript-eslint/parser": "^6.2.1",
-    "@vitejs/plugin-react": "^4.0.4",
     "eslint": "^8.46.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.3",
     "rollup": "^3.29.3",
     "tslib": "^2.6.2",
     "typescript": "^5.0.2",
-    "vite": "^4.4.9"
+    "tsconfig": "workspace:*"
   }
 }
