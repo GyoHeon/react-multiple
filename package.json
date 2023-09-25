@@ -1,8 +1,5 @@
 {
   "private": true,
-  "workspaces": [
-    "apps/*"
-  ],
   "scripts": {
     "build": "turbo run build",
     "build:module": "cd apps/react-multiple && pnpm run build",
