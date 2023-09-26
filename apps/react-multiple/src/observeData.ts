@@ -32,12 +32,11 @@ function updateState<T>(
   observers: ((state: T) => void)[]
 ) {
   if (newState !== oldState) {
-    oldState = newState;
-    observers.forEach((observer) => observer(oldState));
+    observers.forEach((observer) => observer(newState));
   }
 
   // global 환경에서 (primitive한) state를 자동으로 업데이트 하는 방법을 찾지 못해 일단 새로운 state를 리턴합니다.
-  return oldState;
+  return newState;
 }
 
 export const observeData: TObserveData = <T>(initialState: T) => {
