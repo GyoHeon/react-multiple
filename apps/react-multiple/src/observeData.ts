@@ -1,61 +1,46 @@
-type TObserveData = <T>(
-  initialState: T
-) => [T, (newState: T) => T, (observer: (state: T) => void) => void];
-
-/**
- * @description
- * This function is used to observe data changes and re-render the component.
- * @param initialState
- * @returns [state, setState, addObserver]
- *
- * @example
- *
- * const observedNumber = observeData(0);
- * let [state] = observedNumber;
- * const [, setState, addObserver] = observedNumber;
- *
- * const render = () => {
- *  console.log(state.count);
- * };
- *
- * addObserver(render);
- *
- * // state의 최신화를 위해 setState의 리턴값을 다시 state로 사용합니다.
- * state = setState(state + 1);
- *
- * // console output: 1
- */
-
-function updateState<T>(
-  newState: T,
-  oldState: T,
-  observers: ((state: T) => void)[]
-) {
-  if (newState !== oldState) {
-    observers.forEach((observer) => observer(newState));
-  }
-
-  // global 환경에서 (primitive한) state를 자동으로 업데이트 하는 방법을 찾지 못해 일단 새로운 state를 리턴합니다.
-  return newState;
+interface IApi<T> {
+  getState: () => T;
+  setState: (newState: T) => void;
+  setObserver: (observer: (state: T) => void) => () => void;
 }
+type TCreateAPI<T> = (
+  set: IApi<T>["setState"],
+  get: IApi<T>["getState"],
+  api: IApi<T>
+) => T;
 
-export const observeData: TObserveData = <T>(initialState: T) => {
-  const state = initialState;
-  let observers: ((state: T) => void)[] = [];
+type TObserveData = <T>(createState: TCreateAPI<T>) => IApi<T>;
 
-  const setState = (newState: T) => updateState(newState, state, observers);
+export const observeData: TObserveData = (createState) => {
+  type TState = ReturnType<typeof createState>;
+  let state: TState;
+  const observers = new Set<(state: TState) => void>();
 
-  function setObserver(observer: (state: T) => void, remove = false) {
-    if (remove) {
-      observers = observers.filter((obs) => obs !== observer);
+  const getState: IApi<TState>["getState"] = () => state;
+
+  const setState: IApi<TState>["setState"] = (newState) =>
+    updateState(newState, observers);
+
+  const updateState = (
+    newState: TState,
+    observers: Set<(state: TState) => void>
+  ) => {
+    if (newState === state) {
       return;
     }
-    if (observers.includes(observer)) {
-      console.warn("이미 등록된 observer입니다.");
-      return;
-    }
-    observers.push(observer);
-  }
 
-  return [state, setState, setObserver];
+    state = newState;
+    observers.forEach((observer) => observer(newState));
+  };
+
+  const setObserver = (observer: (state: TState) => void) => {
+    observers.add(observer);
+
+    return () => observers.delete(observer);
+  };
+
+  const api = { getState, setState, setObserver };
+  state = createState(setState, getState, api);
+
+  return api;
 };

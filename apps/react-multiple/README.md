@@ -58,3 +58,20 @@ makeRoot({
 
 countRender((state) => numberRender({ count: state }));
 ```
+
+```ts
+const observedNumber = observeData(0);
+let [state] = observedNumber;
+const [, setState, addObserver] = observedNumber;
+
+const render = () => {
+  console.log(state.count);
+};
+
+addObserver(render);
+
+// state의 최신화를 위해 setState의 리턴값을 다시 state로 사용합니다.
+state = setState(state + 1);
+
+// console output: 1
+```

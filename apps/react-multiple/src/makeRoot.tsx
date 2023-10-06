@@ -31,6 +31,5 @@ export const makeRoot = ({ root, props = {}, Component }: IRender) => {
 
   render(props);
 
-  // rerendering 용 render 함수를 리턴합니다. props의 경우 기존 props와 새로운 props를 합쳐서 전달합니다.
   return render;
 };
