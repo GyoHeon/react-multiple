@@ -1,8 +1,13 @@
+type SetStateInternal<T> = {
+  _(partial: T | Partial<T> | { _(state: T): T | Partial<T> }["_"]): void;
+}["_"];
+
 interface IApi<T> {
   getState: () => T;
-  setState: (newState: T) => void;
+  setState: SetStateInternal<T>;
   setObserver: (observer: (state: T) => void) => () => void;
 }
+
 type TCreateAPI<T> = (
   set: IApi<T>["setState"],
   get: IApi<T>["getState"],
@@ -18,19 +23,21 @@ export const observeData: TObserveData = (createState) => {
 
   const getState: IApi<TState>["getState"] = () => state;
 
-  const setState: IApi<TState>["setState"] = (newState) =>
-    updateState(newState, observers);
+  const setState: IApi<TState>["setState"] = (newState) => {
+    let nextState: typeof newState = newState;
 
-  const updateState = (
-    newState: TState,
-    observers: Set<(state: TState) => void>
-  ) => {
-    if (newState === state) {
-      return;
+    if (typeof newState === "function") {
+      nextState = (newState as (state: TState) => TState)(state);
     }
 
-    state = newState;
-    observers.forEach((observer) => observer(newState));
+    updateState(nextState);
+  };
+
+  const updateState: SetStateInternal<TState> = (newState) => {
+    if (!Object.is(newState, state)) {
+      state = Object.assign({}, state, newState);
+      observers.forEach((observer) => observer(state));
+    }
   };
 
   const setObserver = (observer: (state: TState) => void) => {
