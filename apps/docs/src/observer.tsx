@@ -1,33 +1,46 @@
 import makeRoot, { observeData } from "react-multiple";
-import CountButton from "./components/CountButton";
-import CountDisplay from "./components/CountDisplay";
+import ComponentObj from "./components/ComponentObj";
 import "./index.css";
 
-const countButton = document.getElementById(
-  "count-button"
-) as HTMLButtonElement;
-const countNumber = document.getElementById("count-number") as HTMLSpanElement;
+const allReactRoot = document.querySelectorAll("*[data-react]");
 
-const observedNumber = observeData<number>(0);
-// count는 재할당을 위해 따로 let 식별자를 사용
-let [count] = observedNumber;
-const [, setCount, countRender] = observedNumber;
+const Components = [...allReactRoot].map((root) => {
+  const componentName = root.getAttribute(
+    "data-react"
+  ) as keyof typeof ComponentObj;
 
-const numberRender = makeRoot({
-  root: countNumber,
-  props: { count },
-  Component: CountDisplay,
+  const Component = ComponentObj[componentName] || <div>fail!</div>;
+  const props = JSON.parse(root.getAttribute("data-react-props") || "{}") || {};
+
+  const children = (() => {
+    if (root.innerHTML) {
+      if (root.childElementCount === 0) {
+        return root.innerHTML;
+      }
+      props["html"] = root.innerHTML;
+      return null;
+    }
+    return null;
+  })();
+
+  return makeRoot({
+    root,
+    Component,
+    props: { children, ...props },
+  });
 });
 
-makeRoot({
-  root: countButton,
-  props: {
-    onClick: () => {
-      count = setCount(count + 1);
-    },
-  },
-  Component: CountButton,
-});
+const [ButtonRender, DisplayRender] = Components;
 
-// 옵저버 추가
-countRender((state) => numberRender({ count: state }));
+type CounterState = {
+  count: number;
+  inc: () => void;
+};
+
+const observedNumber = observeData<CounterState>((set) => ({
+  count: 0,
+  inc: () => set((state) => ({ count: state.count + 1 })),
+}));
+
+DisplayRender({ count: observedNumber.getState().count });
+ButtonRender({ onClick: observedNumber.getState().inc() });
