@@ -4,6 +4,8 @@ React-multiple is a JavaScript library for make multiple reactRoot.
 
 The `react-multiple` package is useful when attach react library to pre-complete HTML
 
+Observe data is inspired by [zustand](https://github.com/pmndrs/zustand)
+
 ## Usage
 
 For example, if you have pre-complete HTML, count up project.  

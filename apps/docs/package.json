@@ -1,10 +1,10 @@
 {
-  "name": "react-multiple",
+  "name": "react-multiple-docs",
   "description": "Package for attaching React components to early made HTML elements",
   "keywords": [
     "react",
     "html",
-    "react-html"
+    "react-multiple"
   ],
   "version": "0.1.0",
   "type": "module",
