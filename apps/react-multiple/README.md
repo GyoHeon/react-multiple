@@ -1,79 +1,76 @@
 # react-multiple
 
-React-multiple is a JavaScript library for make multiple reactRoot.
+React-multiple is a JavaScript library for make multiple react root.
 
-The `react-multiple` package is useful when attach react library to pre-complete HTML
+Most `React` projects start from an empty HTML. In such cases, the entire DOMs of the page are under the influence of a `react root`, making development straightforward. However, applying `React` to a project built with an already completed HTML like JSP or Thymeleaf has many differences from a typical `React` project.
 
-Observe data is inspired by [zustand](https://github.com/pmndrs/zustand)
+For instance, consider a situation where you're applying CSR with `React` to a project that has SSR set up with Thymeleaf. You would need to set up `multiple react roots` through several `createRoot`. Transferring data between these `multiple react roots` is not common, and ensuring consistent rendering can be challenging.
+
+The `react-multiple` library was created for such situations. Inspired by data manipulation in [`zustand`](https://github.com/pmndrs/zustand), it allows for easy data transfer between `multiple react roots` and ensures consistent rendering with ease.
 
 ## Usage
 
-For example, if you have pre-complete HTML, count up project.  
-This HTML have count up button and count display.  
-Unlike full react project, you have to use HTML DOM.  
-In this situation, you can use react-multiple.
+For instance, imagine you need to create a counter project. But think about a situation where you have to add this counter project to an already completed project with a button DOM and display DOM.
 
-First, find DOM that attach react component.  
-Then, attach react component by `makeRoot`.  
-Finally, attach render function!
+First, find the DOM where you want to attach the react root(component).
+Second, use the `makeRoot` function to render the desired react component to the DOM.
+Third, declare data shared across multiple react roots with `observeData`.
+Lastly, make the `render` function, which is the return of `makeRoot`, observable to the data!
 
 Under example show how this example works.
 
 ```html
 <body>
-  <div id="count-button"></div>
-  <div id="count-number"></div>
+  <div data-react="CountButton"></div>
+  <div data-react="CountDisplay"></div>
   <script type="module" src="/src/observer.tsx"></script>
 </body>
 ```
 
 ```tsx
+// observer.tsx
 import makeRoot, { observeData } from "react-multiple";
-import CountButton from "./components/CountButton";
-import CountDisplay from "./components/CountDisplay";
-import "./index.css";
+import ComponentObj from "./components/ComponentObj";
 
-const countButton = document.getElementById(
-  "count-button"
-) as HTMLButtonElement;
-const countNumber = document.getElementById("count-number") as HTMLSpanElement;
-
-const observedNumber = observeData<number>(0);
-let [count] = observedNumber;
-const [, setCount, countRender] = observedNumber;
-
-const numberRender = makeRoot({
-  root: countNumber,
-  props: { count },
-  Component: CountDisplay,
-});
-
-makeRoot({
-  root: countButton,
-  props: {
-    onClick: () => {
-      count = setCount(count + 1);
-    },
-  },
-  Component: CountButton,
-});
-
-countRender((state) => numberRender({ count: state }));
-```
-
-```ts
-const observedNumber = observeData(0);
-let [state] = observedNumber;
-const [, setState, addObserver] = observedNumber;
-
-const render = () => {
-  console.log(state.count);
+type CounterState = {
+  count: number;
+  increment: () => void;
 };
 
-addObserver(render);
+const observedNumber = observeData<CounterState>((set) => ({
+  count: 0,
+  increment: () => set((state) => ({ count: state.count + 1 })),
+}));
 
-// state의 최신화를 위해 setState의 리턴값을 다시 state로 사용합니다.
-state = setState(state + 1);
+const reactButtonRoot = document.querySelector(
+  "div[data-react=CountButton]"
+) as HTMLDivElement;
+const reactDisplayRoot = document.querySelector(
+  "*[data-react=CountDisplay]"
+) as HTMLDivElement;
 
-// console output: 1
+// Render button only once
+makeRoot({
+  root: reactButtonRoot,
+  Component: ComponentObj.CountButton,
+  props: {
+    onClick: () => {
+      observedNumber.getState().increment();
+    },
+  },
+});
+
+const displayRender = makeRoot({
+  root: reactDisplayRoot,
+  Component: ComponentObj.CountDisplay,
+  props: { count: observedNumber.getState().count },
+});
+
+observedNumber.setObserver(() => {
+  displayRender({ count: observedNumber.getState().count });
+});
 ```
+
+Of course, you could ignore the existing layout and start over with React, but this would result in highly inefficient network traffic and workload. In such cases, using react-multiple allows you to proceed as follows.
+
+If the project is vast and has a large layout processed with SSR, react-multiple is even more efficient.
