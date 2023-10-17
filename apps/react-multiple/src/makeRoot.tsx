@@ -17,9 +17,11 @@ export const makeRoot = ({ root, props = {}, Component }: IRender) => {
 
   const rootElement = createRoot(root);
 
+  let integratedProps = { ...props };
+
   const render = (newProps?: object) => {
-    const integratedProps = {
-      ...props,
+    integratedProps = {
+      ...integratedProps,
       ...newProps,
     };
     rootElement.render(
